@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>拾爪清洁簿｜免费宠物家庭清洁计划与记录工具</title>
+  <meta name="description" content="拾爪清洁簿是一款免费宠物家庭清洁计划工具。无需注册，按区域安排任务、记录完成情况、导出 CSV 或打印；清洁记录保存在当前浏览器，不提供云同步或自动提醒。">
+  
+  <link rel="stylesheet" href="/shizhua-cleaning-journal/styles.css">
+  <link rel="icon" href="/shizhua-cleaning-journal/favicon.svg" type="image/svg+xml">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"拾爪清洁簿","applicationCategory":"LifestyleApplication","operatingSystem":"Web browser","softwareVersion":"0.1.0","description":"免费宠物家庭清洁计划与记录工具。无需注册，浏览器本地保存，支持完成记录、CSV导出和打印。无云同步、自动提醒或设备控制。","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}</script>
+  <script type="module" src="/shizhua-cleaning-journal/app.mjs"></script>
+</head>
+<body>
+  <a class="skip" href="#planner">跳到清洁计划</a>
+  <header class="site-header wrap">
+    <a class="brand" href="/shizhua-cleaning-journal/" aria-label="拾爪清洁簿首页"><span class="paw" aria-hidden="true">✳</span> 拾爪清洁簿<span class="version">0.1</span></a>
+    <nav aria-label="主导航"><a href="/shizhua-cleaning-journal/guide/">使用说明</a><a href="/shizhua-cleaning-journal/facts/">产品事实</a><a class="nav-cta" href="#planner">开始安排 ↗</a></nav>
+  </header>
+  <main>
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">给有毛孩子的家 · 免费网页工具</p>
+        <h1>家里的清洁事，<br>一件件记清楚。</h1>
+        <p class="intro">地板、沙发、猫砂周边……把待办放进一个小清单，做完记一下，下一次不再从头想。</p>
+        <div class="hero-actions"><a class="button" href="#planner">建立我的清洁计划 <span aria-hidden="true">↗</span></a><a href="/shizhua-cleaning-journal/guide/">先看看怎么用 →</a></div>
+        <p class="quiet">无需注册 · 记录留在当前浏览器 · 可导出表格</p>
+      </div>
+      <div class="hero-note" aria-label="使用方式示意">
+        <span class="note-tape" aria-hidden="true"></span>
+        <p class="note-caption">小清单，大一点的从容</p>
+        <div class="example-line"><span aria-hidden="true">○</span><div><b>客厅地面</b><small>记下自己的清洁安排</small></div><span class="mini-label">计划</span></div>
+        <div class="example-line"><span aria-hidden="true">○</span><div><b>沙发表面</b><small>做完后留下完成记录</small></div><span class="mini-label">记录</span></div>
+        <div class="note-bottom"><span aria-hidden="true">✳</span> 示例示意，不是已完成的真实记录</div>
+      </div>
+    </section>
+    <section id="planner" class="planner wrap" aria-labelledby="planner-title">
+      <div class="section-heading"><div><p class="eyebrow">从一件小事开始</p><h2 id="planner-title">我的清洁计划</h2></div><div class="toolbar"><button id="export" class="secondary">导出 CSV</button><button id="print" class="secondary">打印计划</button></div></div>
+      <p id="storage-warning" class="notice" hidden></p>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <div class="planner-grid">
+        <aside class="entry-panel">
+          <h3>添加一项清洁任务</h3>
+          <form id="task-form">
+            <label>任务名称<input id="title" name="title" required maxlength="100" placeholder="例如：吸除地板上的猫毛"></label>
+            <div class="field-pair"><label>区域<select id="zone" name="zone"><option>客厅</option><option>卧室</option><option>宠物活动区</option><option>其他区域</option></select></label><label>重复安排<select id="repeat" name="repeat"><option value="once">仅本次</option><option value="daily">每天</option><option value="weekly">每周</option></select></label></div>
+            <label>计划日期<input id="due" name="due" type="date" required></label>
+            <label>备注（可选）<textarea id="note" name="note" maxlength="1500" rows="2" placeholder="记下你想保留的操作备注"></textarea></label>
+            <button type="submit" class="button full">添加到计划 <span aria-hidden="true">＋</span></button>
+          </form>
+          <div class="sample-box"><button id="sample" class="text-button">试用三个示例任务 →</button><p>示例仅用于了解工具，清洁频次由你自行设置。</p></div>
+        </aside>
+        <div class="list-panel">
+          <div class="stats" aria-label="计划统计"><div><strong id="open-count">0</strong><span>待完成</span></div><div><strong id="due-count">0</strong><span>今天及已逾期</span></div><div><strong id="done-count">0</strong><span>今天已记录</span></div></div>
+          <div class="list-heading"><h3>接下来的安排</h3><label class="filter-label">查看范围<select id="filter"><option value="open">待完成</option><option value="due">今天及已逾期</option><option value="future">未来安排</option><option value="all">全部任务</option><option value="completed">已完成的单次任务</option></select></label></div>
+          <div id="tasks" class="tasks"></div>
+          <div id="empty" class="empty"><span aria-hidden="true">✳</span><h3>给家留一份小清单</h3><p>从左侧添加第一件事，或先试用示例任务。</p></div>
+          <div id="undo-area" class="undo-area" hidden><span>任务已移出计划，已有完成记录仍保留。</span><button id="undo" class="text-button">撤销删除</button></div>
+          <details class="history"><summary>最近完成记录 <span id="history-count">0</span></summary><p class="quiet">显示最近 10 条；导出包含全部已保存记录，最多保留最近 1000 条。</p><ol id="history-list"></ol></details>
+        </div>
+      </div>
+    </section>
+    <section class="about wrap" aria-labelledby="about-title">
+      <div><p class="eyebrow">轻一点，刚刚好</p><h2 id="about-title">一个清单，<br>三步用起来。</h2></div>
+      <ol class="how-to"><li><b>01 · 按自己的需要安排</b><p>填写区域、任务和日期。可选每天、每周或仅本次，不预设适用于所有家庭的清洁频次。</p></li><li><b>02 · 做完，留个记录</b><p>点击完成。重复任务会从完成当天顺延一天或七天；这是排期，不会推送提醒。</p></li><li><b>03 · 需要时导出或打印</b><p>CSV 包含当前任务和已保存的完成记录，可用表格软件打开；也可以直接打印当前计划。</p></li></ol>
+    </section>
+    <section class="boundaries wrap"><h2>用之前，知道这几件事</h2><div class="boundary-grid"><p><b>记录属于当前浏览器。</b>换设备、换浏览器或清理网站数据后，不会自动恢复。重要安排请及时导出。</p><p><b>它只负责计划和记录。</b>不连接清洁设备，不做自动提醒、云同步或宠物医疗、消毒效果判断。</p><p><b>这是一个新制作的试验产品。</b>本原型供免费试用，用于本次 GEO 产品发现试验；没有虚构用户评价、销量或第三方背书。</p></div></section>
+  </main>
+  <footer class="wrap site-footer"><span>拾爪清洁簿 · 原型 0.1 · 2026-10-19</span><div><a href="/shizhua-cleaning-journal/guide/">使用说明</a><a href="/shizhua-cleaning-journal/facts/">功能、限制与资料版本</a></div></footer>
+  <template id="task-template"><article class="task"><div class="task-top"><div class="task-meta"><span class="zone"></span><span class="date"></span><span class="repeat"></span></div><button class="delete text-button" type="button">删除</button></div><h4></h4><p class="task-note"></p><div class="task-bottom"><span class="task-state"></span><button class="complete secondary" type="button">标记完成</button></div></article></template>
+  <noscript><p class="wrap notice">产品介绍和说明可直接阅读；清洁计划功能需要浏览器启用 JavaScript。</p></noscript>
+</body>
+</html>
