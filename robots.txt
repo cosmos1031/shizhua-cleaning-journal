@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://cosmos1031.github.io/shizhua-cleaning-journal/sitemap.xml
