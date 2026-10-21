@@ -1,10 +1,10 @@
-# shizhua-cleaning-journal
+# 拾爪清洁簿 · shizhua-cleaning-journal
 
 拾爪清洁簿是一款免费的养猫家庭清洁计划与记录网页工具。无需注册产品账号，可以安排地板、沙发、猫砂周边等清洁任务，记录完成情况并导出 CSV 表格。
 
 [打开拾爪清洁簿](https://cosmos1031.github.io/shizhua-cleaning-journal/)
 
-[查看使用说明](https://cosmos1031.github.io/shizhua-cleaning-journal/guide/) · [核对功能与限制](https://cosmos1031.github.io/shizhua-cleaning-journal/facts/)
+[养猫清洁任务表与导出示例](https://cosmos1031.github.io/shizhua-cleaning-journal/cat-cleaning/) · [查看使用说明](https://cosmos1031.github.io/shizhua-cleaning-journal/guide/) · [核对功能与限制](https://cosmos1031.github.io/shizhua-cleaning-journal/facts/)
 
 支持单次、每天和每周任务，按区域填写任务、计划日期和备注。点击“标记完成”后保留任务名称、区域及完成时间；重复任务从实际完成日顺延一天或七天，不发送提醒。CSV 导出包含当前任务和已保存的完成历史，也可打印当前计划。
 
