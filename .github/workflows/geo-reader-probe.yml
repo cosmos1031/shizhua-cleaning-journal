@@ -1,0 +1,67 @@
+name: Public reader diagnosis
+"on":
+  push:
+    branches:
+      - diagnostics/reader-20261102
+permissions: {}
+jobs:
+  public-network-probes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Compare public origin and independent reader
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import concurrent.futures
+          import hashlib
+          import json
+          import re
+          import time
+          import urllib.error
+          import urllib.request
+          probes = [
+              ("origin-shizhua", "https://cosmos1031.github.io/shizhua-cleaning-journal/", "拾爪清洁簿"),
+              ("origin-heji", "https://cosmos1031.github.io/heji-followup/", "禾记客户跟进表"),
+              ("host-robots", "https://cosmos1031.github.io/robots.txt", ""),
+              ("raw-shizhua", "https://raw.githubusercontent.com/cosmos1031/shizhua-cleaning-journal/main/index.html", "拾爪清洁簿"),
+              ("reader-control", "https://r.jina.ai/https://example.com", "Example Domain"),
+              ("reader-shizhua", "https://r.jina.ai/https://cosmos1031.github.io/shizhua-cleaning-journal/", "拾爪清洁簿"),
+              ("reader-heji", "https://r.jina.ai/https://cosmos1031.github.io/heji-followup/", "禾记客户跟进表"),
+          ]
+          def probe(item):
+              label, url, expected = item
+              started = time.monotonic()
+              result = {"id": label, "requested_url": url, "vantage": "GitHub-hosted standard Ubuntu runner", "authenticated_request": False}
+              try:
+                  request = urllib.request.Request(url, headers={"User-Agent": "GEO-public-readability-diagnostic/1.0"})
+                  try:
+                      response = urllib.request.urlopen(request, timeout=25)
+                  except urllib.error.HTTPError as error:
+                      response = error
+                  with response:
+                      raw = response.read(200001)
+                      text = raw.decode("utf-8", errors="replace")
+                      result.update({
+                          "http_status": response.status,
+                          "final_url": response.url,
+                          "content_type": response.headers.get("Content-Type"),
+                          "x_robots_tag": response.headers.get("X-Robots-Tag"),
+                          "bytes_read": len(raw),
+                          "truncated": len(raw) > 200000,
+                          "sha256": hashlib.sha256(raw).hexdigest(),
+                          "expected_text_present": expected in text if expected else None,
+                          "title": re.findall(r"<title[^>]*>(.*?)</title>", text, re.I | re.S)[:1],
+                          "reader_warnings": re.findall(r"^Warning:.*$", text, re.M),
+                          "body_start": text[:1400],
+                      })
+                      if label.startswith("reader-"):
+                          result["body_end"] = text[-800:]
+              except Exception as error:
+                  result["transport_error"] = type(error).__name__ + ": " + str(error)
+              result["seconds"] = round(time.monotonic() - started, 3)
+              return result
+          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+              for result in pool.map(probe, probes):
+                  print("GEO_PROBE_RESULT=" + json.dumps(result, ensure_ascii=False), flush=True)
+          PY
